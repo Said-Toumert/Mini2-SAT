@@ -3,7 +3,7 @@ import java.util.LinkedList;
 
 public class Graph<Label>  {
 
-    private class Edge {
+    public class Edge {
         public int source;
         public int destination;
         public Label label;
@@ -36,6 +36,14 @@ public class Graph<Label>  {
 	    throw new Exception("Sommets trop gros pour la taille du graphe");
 	}
         incidency.get(source).addLast(new Edge(source,dest,label));
+    }
+
+    public LinkedList<Integer> getVoisins(int sommet) {
+        LinkedList<Integer> voisins = new LinkedList<>();
+        for (Edge edge : incidency.get(sommet)) {
+            voisins.add(edge.destination);
+        }
+        return voisins;
     }
 
     public String toString() {

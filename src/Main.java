@@ -12,7 +12,7 @@ public class Main {
         Parser parser = new Parser();
         Graph<String> graph = parser.parse(filename);
 
-        Kosaraju k = new Kosaraju(graph);
+        Kosaraju k = new Kosaraju(graph, filename);
         int[] composantes = k.sccs();
 
         if (TwoSat.checkConsistency(composantes)) {
