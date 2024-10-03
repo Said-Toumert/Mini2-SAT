@@ -14,24 +14,24 @@
 
                 while ((line = reader.readLine()) != null) {
                     if (line.startsWith("c")) {
-                        continue; // Comment line, skip it
+                        continue;
                     }
                     if (line.startsWith("p")) {
-                        // Line indicating the number of variables and clauses
+
                         String[] parts = line.split(" ");
                         numVariables = Integer.parseInt(parts[2]);
                         numClauses = Integer.parseInt(parts[3]);
-                        // Create a new graph with double the size (each variable has a positive and a negative literal)
+                        //System.out.println(numVariables);
+                       // System.out.println(numClauses);
+
                         graph = new Graph<>(2 * numVariables);
                         continue;
                     }
-                    // Process clauses
+
                     String[] literals = line.split(" ");
-                    for (int i = 0; i < literals.length - 1; i++) {
-                        int l1 = Integer.parseInt(literals[i]);
-                        int l2 = Integer.parseInt(literals[i + 1]);
-                        addClause(graph, l1, l2);
-                    }
+
+                    addClause(graph, Integer.parseInt(literals[0]), Integer.parseInt(literals[1]));
+
                 }
             } catch (IOException e) {
                 e.printStackTrace();

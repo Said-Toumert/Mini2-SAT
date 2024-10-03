@@ -18,7 +18,7 @@ public class Kosaraju {
     public int[] sccs() {
         int n = graph.order();
 
-        // Step 1: Fill the finish stack with nodes based on their finishing time
+
         for (int i = 0; i < n; i++) {
             if (!visited[i]) {
                 dfsFill(i);
