@@ -35,25 +35,33 @@
                 }
             } catch (IOException e) {
                 e.printStackTrace();
+            } catch (Exception e) {
+                throw new RuntimeException(e);
             }
 
             return graph;
         }
 
-        private void addClause(Graph<String> graph, int l1, int l2) {
-            // Calculate positive and negative literals
-            int posL1 = Math.abs(l1) - 1;
-            int posL2 = Math.abs(l2) - 1;
-            int negL1 = posL1 + (l1 < 0 ? graph.order() / 2 : 0);
-            int negL2 = posL2 + (l2 < 0 ? graph.order() / 2 : 0);
+        private void addClause(Graph<String> graph, int l1, int l2) throws Exception {
+            int n = graph.order() / 2;  // Number of variables
 
-            try {
-                graph.addArc(negL1, posL2, ""); // ¬l1 ⇒ l2
-                graph.addArc(negL2, posL1, ""); // ¬l2 ⇒ l1
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            // Convert literals to indices (positive and negative)
+            int indexL1 = literalToIndex(l1, n);
+            int indexL2 = literalToIndex(l2, n);
+
+            int negIndexL1 = literalToIndex(-l1, n);  // Negation of l1
+            int negIndexL2 = literalToIndex(-l2, n);  // Negation of l2
+
+            // Add implications to the graph
+            graph.addArc(negIndexL1, indexL2, ""); // ¬l1 -> l2
+            graph.addArc(negIndexL2, indexL1, ""); // ¬l2 -> l1
         }
+
+        private int literalToIndex(int literal, int n) {
+            // Positive literals map to [0, n-1], negative literals map to [n, 2n-1]
+            return (literal > 0) ? (literal - 1) : (n + Math.abs(literal) - 1);
+        }
+
 
 
     }
