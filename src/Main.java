@@ -1,8 +1,11 @@
+import java.io.IOException;
+import java.util.Stack;
+
 import static java.lang.System.exit;
 
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
 
         String filename = "formulas/formule-2-sat.txt";
         if (0 < args.length) {
@@ -10,20 +13,20 @@ public class Main {
         }
 
         Parser parser = new Parser();
-        Graph<String> graph = parser.parse(filename);
+        parser.parseFile(filename);
+        System.out.println(parser.printClauses());
+        ImplicationsGraphe graphe = new ImplicationsGraphe(parser.getNbVariables());
 
-        Kosaraju k = new Kosaraju(graph);
-        int[] composantes = k.sccs();
+        graphe.grapheimplication(parser);
+        System.out.println(graphe.toString());
+        //DFS dfs = new DFS(graphe.order());
+        Kosaraju SCC = new Kosaraju(graphe);
+        System.out.println( SCC.findStronglyConnectedComponents());
 
-        if (TwoSat.checkConsistency(composantes)) {
-            System.out.println("Formula " + filename + ": satisfiable");
-            exit(0);
-        } else {
-            System.out.println("Formula " + filename + ": unsatisfiable");
-            exit(-1);
-        }
-        exit(0);
+
+
 
     }
+
 
 }

@@ -32,9 +32,9 @@ public class Graph<Label>  {
     }
 
     public void addArc(int source, int dest, Label label) throws Exception {
-	if (Math.max(source,dest) >= this.cardinal){
+	/*if (Math.max(source,dest) >= this.cardinal){
 	    throw new Exception("Sommets trop gros pour la taille du graphe");
-	}
+	}*/
         incidency.get(source).addLast(new Edge(source,dest,label));
     }
 
@@ -56,12 +56,25 @@ public class Graph<Label>  {
         result = result.concat("\nArcs : \n");
         for (int i = 0; i<cardinal;i++) {
             for (Edge e : incidency.get(i)) {
-                result = result.concat(e.source + " -> " + e.destination + ", étiquette : "
-				       + e.label.toString() + "\n");
+                result = result.concat(e.source + "->" + e.destination+", " /*+ ", étiquette : "
+				       + e.label.toString() + "\n"*/);
             }
         }
         return result;
 	
+    }
+
+    public Graph<Label> transpose() throws Exception {
+        Graph<Label> transposedGraph = new Graph<>(this.order());
+
+        for (int i = 0; i < this.order(); i++) {
+            for (Edge edge : incidency.get(i)) {
+                // Inverser l'arc : destination -> source
+                transposedGraph.addArc(edge.destination, edge.source, edge.label);
+            }
+        }
+
+        return transposedGraph;
     }
     
 }

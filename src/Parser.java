@@ -1,67 +1,64 @@
-    import java.io.BufferedReader;
-    import java.io.FileReader;
-    import java.io.IOException;
+import java.util.ArrayList;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 
-    public class Parser {
+public class Parser {
+    private int nbVariables;
+    private int nbClauses;
+    private ArrayList<int[]> clauses;
 
-        public Graph<String> parse(String fileName) {
-            Graph<String> graph = null;
 
-            try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
-                String line;
-                int numVariables = 0;
-                int numClauses = 0;
+    public ArrayList<int[]> getClauses() {
+        return clauses;
+    }
+    public int getNbClauses() {
+        return nbClauses;
+    }
+    public int getNbVariables() {
+        return nbVariables;
+    }
 
-                while ((line = reader.readLine()) != null) {
-                    if (line.startsWith("c")) {
-                        continue;
-                    }
-                    if (line.startsWith("p")) {
 
-                        String[] parts = line.split(" ");
-                        numVariables = Integer.parseInt(parts[2]);
-                        numClauses = Integer.parseInt(parts[3]);
-                        //System.out.println(numVariables);
-                       // System.out.println(numClauses);
+    public Parser(){
+        this.clauses = new ArrayList<int[]>();
+    }
 
-                        graph = new Graph<>(2 * numVariables);
-                        continue;
-                    }
 
-                    String[] literals = line.split(" ");
+    public void parseFile(String fileName) throws IOException {
+        BufferedReader reader = new BufferedReader(new FileReader(fileName));
+        String line;
+        while((line = reader.readLine()) != null){
+            /// retirer les espaces au debut et fin de la ligne
+            line = line.trim();
 
-                    addClause(graph, Integer.parseInt(literals[0]), Integer.parseInt(literals[1]));
-
+            /// verifier si la ligne commence par un "C" , si c le cas o, l'ignore
+            if(line.startsWith("c")) continue;
+            else if (line.startsWith("p")) {
+                String[]parts =  line.split("\\s+");
+                nbVariables = Integer.parseInt(parts[2]);
+                nbClauses = Integer.parseInt(parts[3]);
+            }
+            else{
+                String[] literals = line.split("\\s+");
+                int [] clause = new int[2];
+                for(int index = 0; index < literals.length-1; index++){
+                    clause[index] = Integer.parseInt(literals[index]);
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (Exception e) {
-                throw new RuntimeException(e);
+                clauses.add(clause);
             }
 
-            return graph;
         }
-
-        private void addClause(Graph<String> graph, int l1, int l2) throws Exception {
-            int n = graph.order() / 2;  // Number of variables
-
-            // Convert literals to indices (positive and negative)
-            int indexL1 = literalToIndex(l1, n);
-            int indexL2 = literalToIndex(l2, n);
-
-            int negIndexL1 = literalToIndex(-l1, n);  // Negation of l1
-            int negIndexL2 = literalToIndex(-l2, n);  // Negation of l2
-
-            // Add implications to the graph
-            graph.addArc(negIndexL1, indexL2, ""); // ¬l1 -> l2
-            graph.addArc(negIndexL2, indexL1, ""); // ¬l2 -> l1
-        }
-
-        private int literalToIndex(int literal, int n) {
-            // Positive literals map to [0, n-1], negative literals map to [n, 2n-1]
-            return (literal > 0) ? (literal - 1) : (n + Math.abs(literal) - 1);
-        }
-
-
 
     }
+
+    public String printClauses() {
+        StringBuilder result = new StringBuilder();
+        for (int[] clause : clauses) {
+            result.append("[").append(clause[0]).append(",").append(clause[1]).append("]").append("\n");
+        }
+        return result.toString();
+    }
+
+
+}
