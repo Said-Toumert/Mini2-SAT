@@ -32,7 +32,7 @@ public class Parser {
             /// retirer les espaces au debut et fin de la ligne
             line = line.trim();
 
-            /// verifier si la ligne commence par un "C" , si c le cas o, l'ignore
+            /// pour ignorer la ligne cmmancant par un "C"
             if(line.startsWith("c")) continue;
             else if (line.startsWith("p")) {
                 String[]parts =  line.split("\\s+");

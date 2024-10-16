@@ -1,44 +1,44 @@
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Stack;
+import java.util.*;
 
 public class Kosaraju {
-    private Graph graph;
 
-    public Kosaraju(ImplicationsGraphe graph) {
+    private Graph<String> graph;
+    private DFS dfsHelper;
+
+    // Constructeur prenant le graphe en paramètre
+    public Kosaraju(Graph<String> graph) {
         this.graph = graph;
+        this.dfsHelper = new DFS(graph.order());
     }
 
-    public ArrayList<ArrayList<Integer>> findStronglyConnectedComponents() throws Exception {
-        // Premier DFS
-        DFS dfs = new DFS(graph.order());
-        for (int v = 0; v < graph.order(); v++) {
-            if (!dfs.isVisited(v)) {
-                dfs.performDFS(graph, v);
+    // Méthode principale pour trouver les composantes fortement connexes
+    public int[] findSCCs() throws Exception {
+        int n = graph.order();
+
+        // Première passe DFS sur le graphe original pour remplir la pile
+        for (int i = 0; i < n; i++) {
+            if (!dfsHelper.getVisited()[i]) {
+                dfsHelper.dfsFirstPass(graph, i);
             }
         }
 
-        Graph transposedGraph = graph.transpose();
-        ArrayList<ArrayList<Integer>> stronglyConnectedComponents = new ArrayList<>();
-        Stack<Integer> finishOrder = dfs.getFinishOrder();
+        // Transposer le graphe
+        Graph<String> transposedGraph = graph.transpose();
 
-        dfs = new DFS(transposedGraph.order());
+        // Réinitialiser le tableau de visités pour la deuxième passe
+        dfsHelper.resetVisited();
 
-        while (!finishOrder.isEmpty()) {
-            int v = finishOrder.pop();
-            if (!dfs.isVisited(v)) {
-                ArrayList<Integer> component = new ArrayList<>();
-                dfs.performDFS(transposedGraph, v);
+        // Deuxième passe DFS sur le graphe transposé
+        Stack<Integer> finishStack = dfsHelper.getFinishStack();
+        while (!finishStack.isEmpty()) {
+            int vertex = finishStack.pop();
 
-                for (int i = 0; i < transposedGraph.order(); i++) {
-                    if (dfs.isVisited(i)) {
-                        component.add(i);
-                    }
-                }
-                stronglyConnectedComponents.add(component);
+            if (!dfsHelper.getVisited()[vertex]) {
+                dfsHelper.dfsSecondPass(transposedGraph, vertex);
+                dfsHelper.incrementComponent();
             }
         }
 
-        return stronglyConnectedComponents;
+        return dfsHelper.getComponentIds();  // Retourner les identifiants des composantes
     }
 }

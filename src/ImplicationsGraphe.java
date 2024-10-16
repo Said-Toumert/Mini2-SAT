@@ -4,9 +4,11 @@ import java.util.ArrayList;
 public class ImplicationsGraphe extends Graph{
 
     public ImplicationsGraphe(int nbvariables) {
+
         super(2 * nbvariables);
     }
 
+    /// pour indexer les litereaux, les positif de 0 jusqua n-1/2, les negatifs de n/2 jusqu' a n-1
     private int  literalToIndex(int literal){
         int index;
         if(literal > 0){
@@ -14,7 +16,6 @@ public class ImplicationsGraphe extends Graph{
         }else{
             index = -literal - 1 + this.order()/2;
         }
-        //System.out.println("literal: "+literal+ " son index: " + index);
         return index;
     }
     private void addImplication(int literalSource, int literalTarget) throws Exception{
