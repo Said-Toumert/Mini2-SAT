@@ -5,6 +5,7 @@ public class TwoSat {
         for (int i = 0; i < n; i++) {
             // Vérifie si une variable et sa négation sont dans la même composante fortement connexe
             if (composantes[i] == composantes[i + n]) {
+                System.out.println(i +1+ " -" + i+1);
                 return false; // Inconsistante, donc la formule est insatisfiable
             }
         }

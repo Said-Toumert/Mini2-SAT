@@ -30,6 +30,10 @@ public class DFS {
         return visited;
     }
 
+    public boolean isVisited(int vertex) {
+        return visited[vertex];
+    }
+
     // Réinitialiser le tableau de visités pour la deuxième passe
     public void resetVisited() {
         Arrays.fill(visited, false);
