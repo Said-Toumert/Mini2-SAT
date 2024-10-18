@@ -1,8 +1,11 @@
-
+Said Toumert
+Melissa Messaoudi
 Rapport sur l'implémentation de l'algorithme de Kosaraju et du graphe d'implication
 
 Date : 2024-10-16
-
+compiler :
+javac -d out src/*.java
+executer:
 java -cp out Main formulas/testSet0/formula7.txt
 
 1. Introduction
@@ -85,6 +88,26 @@ La classe Kosaraju est le cœur de l'algorithme. Elle utilise les méthodes DFS 
 4. Deuxième passe DFS : Un second parcours en profondeur est effectué sur le graphe transposé, en suivant l'ordre des sommets dans la pile. Chaque composante fortement connexe est identifiée et marquée dans le tableau `componentIds`.
 5. Résolution du problème 2-SAT : À partir des composantes fortement connexes identifiées, il est possible de déterminer si le problème 2-SAT possède une solution ou non. Si deux littéraux opposés appartiennent à la même CFC, alors le problème est insatisfiable.
 
+
+
+
+
+Problème 1 : Indexation incorrecte des littéraux
+
+Problème :
+Dans la méthode literalToIndex, l'indexation des littéraux positifs et négatifs est gérée de manière manuelle, ce qui peut provoquer des erreurs si les littéraux dépassent la taille allouée. Par exemple, si les valeurs des littéraux dépassent l'ordre du graphe, cela pourrait causer un dysfonctionnement.
+
+Solution :
+Il faut s'assurer que les indices générés sont dans les limites du graphe en ajoutant des vérifications supplémentaires. On peut lever une exception si un littéral donné est hors des limites. Ainsi, on garantit que l'indice est correct avant d'ajouter une implication.
+
+Probleme 2 : 
+Affichage incorrect des composantes connexes quand cest pas satisfaisable,
+solution : 
+creaction d'une fonction get_compo qui affiche les composantes
+
+
+probleme 3: 
+
 5. Conclusion
 
 Le projet a permis d'implémenter un algorithme efficace pour détecter les composantes fortement connexes,
@@ -93,5 +116,4 @@ claire du code, facilitant la gestion du graphe, du parcours en profondeur, et d
 données utilisées, telles que les listes chaînées pour les arêtes et les piles pour le stockage temporaire des sommets, ont offert
 une gestion efficace de la mémoire et du temps d'exécution. Le projet respecte ainsi une complexité temporelle de O(V + E),
 ce qui en fait une solution adaptée pour les grands graphes.
-
 
